@@ -38,5 +38,5 @@ COPY --from=build /app/backend/prisma ./backend/prisma
 RUN npm --workspace backend run prisma:generate
 
 EXPOSE 3001
-CMD ["sh", "-c", "cd backend && npx prisma migrate deploy && node dist/main.js"]
+CMD ["sh", "-c", "cd backend && npx prisma migrate deploy && npx prisma db seed && node dist/main.js"]
 

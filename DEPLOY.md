@@ -42,9 +42,14 @@ docker compose -f docker-compose.prod.yml up -d --build
 
 ```bash
 prisma migrate deploy
+prisma db seed
 ```
 
 База хранится в volume `pgdata`.
+
+Seed добавляет:
+- 10 кортов в Москве
+- ADMIN пользователя `admin@example.com` / `admin123`
 
 ## HTTPS (рекомендовано)
 
