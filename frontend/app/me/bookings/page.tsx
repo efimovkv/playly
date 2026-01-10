@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiFetch } from "@/app/lib/api";
 import { getToken } from "@/app/lib/auth";
+import { Button } from "@/app/components/ui/Button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/Card";
+import { Badge } from "@/app/components/ui/Badge";
 
 type Booking = {
   id: string;
@@ -49,43 +52,72 @@ export default function MyBookingsPage() {
   }
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-semibold">Мои брони</h1>
+    <div className="space-y-6">
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Мои брони</h1>
+          <p className="mt-1 text-sm text-slate-600">Здесь можно посмотреть и отменить свои брони.</p>
+        </div>
+      </div>
 
       {error ? (
-        <div className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>
+        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">{error}</div>
       ) : null}
 
       {!items ? (
-        <div className="text-sm text-gray-600">Загрузка…</div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Загрузка…</CardTitle>
+            <CardDescription>Получаем ваши брони.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-14 animate-pulse rounded-2xl bg-slate-100" />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       ) : items.length === 0 ? (
-        <div className="rounded border bg-white p-4 text-sm text-gray-700">У вас пока нет броней.</div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Пока пусто</CardTitle>
+            <CardDescription>У вас ещё нет броней. Выберите корт и забронируйте удобный слот.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Badge tone="neutral">Совет: начните с главной страницы</Badge>
+          </CardContent>
+        </Card>
       ) : (
-        <div className="rounded border bg-white">
-          <ul className="divide-y">
-            {items.map((b) => {
-              const start = DateTime.fromISO(b.startAt).setZone("Europe/Moscow");
-              const end = DateTime.fromISO(b.endAt).setZone("Europe/Moscow");
-              return (
-                <li key={b.id} className="flex items-center justify-between gap-4 px-4 py-3">
-                  <div className="min-w-0">
-                    <div className="truncate font-medium">{b.court.name}</div>
-                    <div className="truncate text-sm text-gray-600">{b.court.location}</div>
-                    <div className="text-sm text-gray-900">
-                      {start.toFormat("dd.MM.yyyy HH:mm")}–{end.toFormat("HH:mm")}
-                    </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {items.map((b) => {
+            const start = DateTime.fromISO(b.startAt).setZone("Europe/Moscow");
+            const end = DateTime.fromISO(b.endAt).setZone("Europe/Moscow");
+            return (
+              <Card key={b.id} className="h-full">
+                <CardHeader>
+                  <CardTitle className="truncate">{b.court.name}</CardTitle>
+                  <CardDescription className="truncate">{b.court.location}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge tone="neutral">{start.toFormat("dd.MM.yyyy")}</Badge>
+                    <Badge tone="neutral">
+                      {start.toFormat("HH:mm")}–{end.toFormat("HH:mm")}
+                    </Badge>
                   </div>
-                  <button
-                    className="rounded border px-3 py-1.5 text-sm hover:border-gray-400 disabled:opacity-50"
+                  <Button
+                    variant="secondary"
+                    className="w-full"
                     disabled={busyId === b.id}
                     onClick={() => cancel(b.id)}
                   >
-                    Отменить
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+                    Отменить бронь
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       )}
     </div>

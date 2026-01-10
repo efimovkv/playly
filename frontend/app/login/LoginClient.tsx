@@ -5,6 +5,9 @@ import { FormEvent, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { apiFetch } from "@/app/lib/api";
 import { setToken } from "@/app/lib/auth";
+import { Button } from "@/app/components/ui/Button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/Card";
+import { Input } from "@/app/components/ui/Input";
 
 export function LoginClient() {
   const router = useRouter();
@@ -36,41 +39,51 @@ export function LoginClient() {
 
   return (
     <div className="mx-auto max-w-md space-y-4">
-      <h1 className="text-2xl font-semibold">Вход</h1>
+      <div>
+        <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Вход</h1>
+        <p className="mt-1 text-sm text-slate-600">Войдите, чтобы бронировать слоты и управлять бронями.</p>
+      </div>
       {error ? (
-        <div className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>
+        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">{error}</div>
       ) : null}
-      <form onSubmit={onSubmit} className="space-y-3 rounded border bg-white p-4">
-        <label className="block text-sm">
-          <div className="mb-1 text-gray-700">Email</div>
-          <input
-            className="w-full rounded border px-3 py-2"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
-        <label className="block text-sm">
-          <div className="mb-1 text-gray-700">Пароль</div>
-          <input
-            className="w-full rounded border px-3 py-2"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        <button
-          className="w-full rounded bg-gray-900 px-3 py-2 text-sm text-white hover:bg-black disabled:opacity-50"
-          disabled={busy}
-          type="submit"
-        >
-          Войти
-        </button>
-      </form>
+      <Card>
+        <CardHeader>
+          <CardTitle>Данные для входа</CardTitle>
+          <CardDescription>Email + пароль (JWT).</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={onSubmit} className="space-y-3">
+            <label className="block text-sm">
+              <div className="mb-1 text-slate-700">Email</div>
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="you@example.com"
+              />
+            </label>
+            <label className="block text-sm">
+              <div className="mb-1 text-slate-700">Пароль</div>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+              />
+            </label>
+            <Button className="w-full" disabled={busy} type="submit">
+              Войти
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
       <div className="text-sm text-gray-600">
-        Нет аккаунта? <Link className="underline" href="/register">Регистрация</Link>
+        Нет аккаунта?{" "}
+        <Link className="font-medium text-slate-900 underline decoration-slate-300 underline-offset-4" href="/register">
+          Регистрация
+        </Link>
       </div>
     </div>
   );

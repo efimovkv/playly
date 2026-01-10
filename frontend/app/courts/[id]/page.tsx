@@ -5,6 +5,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { apiFetch } from "@/app/lib/api";
 import { getToken } from "@/app/lib/auth";
+import { Badge } from "@/app/components/ui/Badge";
+import { Button } from "@/app/components/ui/Button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/Card";
+import { cn } from "@/app/components/ui/cn";
 
 type Court = {
   id: string;
@@ -94,77 +98,114 @@ export default function CourtPage() {
   }
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold">{court ? court.name : "Корт"}</h1>
-        <p className="text-sm text-gray-600">{court ? court.location : `ID: ${courtId || "—"}`}</p>
+    <div className="space-y-6">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl font-semibold tracking-tight text-slate-900">{court ? court.name : "Корт"}</h1>
+        <p className="text-sm text-slate-600">{court ? court.location : `ID: ${courtId || "—"}`}</p>
+        <div className="flex flex-wrap gap-2 pt-1">
+          <Badge tone="neutral">07:00–00:00</Badge>
+          <Badge tone="neutral">1 час</Badge>
+          <Badge tone="neutral">Макс. 24 часа вперёд</Badge>
+        </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-sm text-gray-700">Дата:</span>
-        <button
-          className={`rounded px-3 py-1.5 text-sm ${
-            date === today ? "bg-gray-900 text-white" : "border bg-white hover:border-gray-400"
-          }`}
-          onClick={() => setDate(today)}
-        >
-          Сегодня
-        </button>
-        <button
-          className={`rounded px-3 py-1.5 text-sm ${
-            date === tomorrow ? "bg-gray-900 text-white" : "border bg-white hover:border-gray-400"
-          }`}
-          onClick={() => setDate(tomorrow)}
-        >
-          Завтра
-        </button>
-        <span className="ml-auto text-sm text-gray-600">График: 07:00–00:00</span>
-      </div>
+      <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
+        <Card className="h-fit">
+          <CardHeader>
+            <CardTitle>Выбор даты</CardTitle>
+            <CardDescription>Доступны сегодня и завтра.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                className={cn(
+                  "h-10 rounded-xl text-sm font-medium ring-1 transition-colors",
+                  date === today
+                    ? "bg-slate-900 text-white ring-slate-900"
+                    : "bg-white text-slate-700 ring-slate-200 hover:bg-slate-50",
+                )}
+                onClick={() => setDate(today)}
+              >
+                Сегодня
+              </button>
+              <button
+                className={cn(
+                  "h-10 rounded-xl text-sm font-medium ring-1 transition-colors",
+                  date === tomorrow
+                    ? "bg-slate-900 text-white ring-slate-900"
+                    : "bg-white text-slate-700 ring-slate-200 hover:bg-slate-50",
+                )}
+                onClick={() => setDate(tomorrow)}
+              >
+                Завтра
+              </button>
+            </div>
+            <div className="rounded-xl bg-slate-50 p-3 text-xs text-slate-600 ring-1 ring-slate-200">
+              Слоты формируются по часовым интервалам. Последний старт — <b>23:00</b>.
+            </div>
+          </CardContent>
+        </Card>
 
       {!courtId ? (
-        <div className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
           Не удалось определить ID корта из URL.
         </div>
       ) : null}
 
       {error ? (
-        <div className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>
+        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">{error}</div>
       ) : null}
       {info ? (
-        <div className="rounded border border-green-200 bg-green-50 p-3 text-sm text-green-800">{info}</div>
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">{info}</div>
       ) : null}
 
       {!availability ? (
-        <div className="text-sm text-gray-600">Загрузка слотов…</div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Слоты</CardTitle>
+            <CardDescription>Загрузка…</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="h-10 animate-pulse rounded-xl bg-slate-100" />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       ) : (
-        <div className="rounded border bg-white">
-          <div className="border-b px-4 py-2 text-sm font-medium">Слоты на {availability.date}</div>
-          <ul className="divide-y">
-            {availability.slots.map((s) => (
-              <li key={s.startAt} className="flex items-center justify-between px-4 py-2">
-                <div>
-                  <div className="font-medium">{s.label}</div>
-                  <div className="text-xs text-gray-600">Длительность: 1 час</div>
+        <Card>
+          <CardHeader className="flex-row items-center justify-between gap-4 space-y-0">
+            <div>
+              <CardTitle>Слоты на {availability.date}</CardTitle>
+              <CardDescription>Нажмите “Забронировать”, чтобы создать бронь на 1 час.</CardDescription>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge tone="success">Свободно</Badge>
+              <Badge tone="neutral">Занято</Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-5">
+              {availability.slots.map((s) => (
+                <div key={s.startAt} className="flex items-center justify-between gap-2 rounded-2xl bg-slate-50 p-2 ring-1 ring-slate-200">
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold text-slate-900">{s.label}</div>
+                    <div className="text-[11px] text-slate-600">1 час</div>
+                  </div>
+                  {s.isAvailable ? (
+                    <Button size="sm" disabled={busy} onClick={() => book(s.startAt)}>
+                      + 
+                    </Button>
+                  ) : (
+                    <span className="text-xs font-medium text-slate-500">—</span>
+                  )}
                 </div>
-                {s.isAvailable ? (
-                  <button
-                    className="rounded bg-gray-900 px-3 py-1.5 text-sm text-white hover:bg-black disabled:opacity-50"
-                    disabled={busy}
-                    onClick={() => book(s.startAt)}
-                  >
-                    Забронировать
-                  </button>
-                ) : (
-                  <span className="text-sm text-gray-500">Занято</span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       )}
-
-      <div className="text-xs text-gray-500">
-        Можно бронировать максимум за 24 часа вперёд.
       </div>
     </div>
   );

@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { apiFetch } from "./lib/api";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./components/ui/Card";
+import { Input } from "./components/ui/Input";
+import { Badge } from "./components/ui/Badge";
 
 type Court = {
   id: string;
@@ -14,6 +17,7 @@ type Court = {
 export default function Home() {
   const [courts, setCourts] = useState<Court[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     apiFetch<Court[]>("/courts")
@@ -21,30 +25,60 @@ export default function Home() {
       .catch((e) => setError(e instanceof Error ? e.message : String(e)));
   }, []);
 
+  const filtered = useMemo(() => {
+    if (!courts) return null;
+    const q = query.trim().toLowerCase();
+    if (!q) return courts;
+    return courts.filter((c) => `${c.name} ${c.location}`.toLowerCase().includes(q));
+  }, [courts, query]);
+
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold">Корты в Москве</h1>
-        <p className="text-sm text-gray-600">Выберите корт, чтобы посмотреть слоты и забронировать.</p>
+    <div className="space-y-6">
+      <div className="rounded-3xl border border-slate-200/60 bg-white/70 p-6 shadow-sm backdrop-blur">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Бронирование кортов</h1>
+            <p className="mt-1 text-sm text-slate-600">
+              Выберите корт, посмотрите свободные слоты и забронируйте на 1 час.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Badge tone="neutral">Москва</Badge>
+              <Badge tone="neutral">07:00–00:00</Badge>
+              <Badge tone="neutral">+24 часа вперёд</Badge>
+            </div>
+          </div>
+          <div className="w-full sm:max-w-xs">
+            <Input
+              placeholder="Поиск по названию или локации…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+          </div>
+        </div>
       </div>
 
       {error ? (
-        <div className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>
+        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">{error}</div>
       ) : null}
 
-      {!courts ? (
-        <div className="text-sm text-gray-600">Загрузка…</div>
+      {!filtered ? (
+        <div className="text-sm text-slate-600">Загрузка…</div>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2">
-          {courts.map((c) => (
-            <Link
-              key={c.id}
-              href={`/courts/${c.id}`}
-              className="rounded border bg-white p-4 hover:border-gray-400"
-            >
-              <div className="font-medium">{c.name}</div>
-              <div className="text-sm text-gray-600">{c.location}</div>
-              <div className="mt-2 text-sm text-gray-900">Открыто: 07:00–00:00</div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((c) => (
+            <Link key={c.id} href={`/courts/${c.id}`} className="group">
+              <Card className="h-full transition-shadow group-hover:shadow-md">
+                <CardHeader>
+                  <CardTitle className="leading-6">{c.name}</CardTitle>
+                  <CardDescription>{c.location}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-slate-700">Слоты на сегодня/завтра</span>
+                    <span className="text-sm font-medium text-slate-900">Открыть →</span>
+                  </div>
+                </CardContent>
+              </Card>
             </Link>
           ))}
         </div>
