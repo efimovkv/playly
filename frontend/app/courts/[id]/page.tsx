@@ -2,7 +2,7 @@
 
 import { DateTime } from "luxon";
 import { useEffect, useMemo, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { apiFetch } from "@/app/lib/api";
 import { getToken } from "@/app/lib/auth";
 
@@ -22,9 +22,15 @@ type AvailabilityResponse = {
   }>;
 };
 
-export default function CourtPage({ params }: { params: { id: string } }) {
+export default function CourtPage() {
   const router = useRouter();
   const pathname = usePathname();
+  const params = useParams();
+  const courtId = useMemo(() => {
+    const raw = (params as any)?.id as string | string[] | undefined;
+    if (!raw) return "";
+    return Array.isArray(raw) ? raw[0] ?? "" : raw;
+  }, [params]);
 
   const [court, setCourt] = useState<Court | null>(null);
   const [date, setDate] = useState<string>(() => DateTime.now().setZone("Europe/Moscow").toISODate()!);
@@ -40,21 +46,23 @@ export default function CourtPage({ params }: { params: { id: string } }) {
   );
 
   useEffect(() => {
+    if (!courtId) return;
     apiFetch<Court[]>("/courts")
       .then((list) => {
-        const found = list.find((c) => c.id === params.id) ?? null;
+        const found = list.find((c) => c.id === courtId) ?? null;
         setCourt(found);
       })
       .catch((e) => setError(e instanceof Error ? e.message : String(e)));
-  }, [params.id]);
+  }, [courtId]);
 
   useEffect(() => {
+    if (!courtId) return;
     setError(null);
     setInfo(null);
-    apiFetch<AvailabilityResponse>(`/courts/${params.id}/availability?date=${encodeURIComponent(date)}`)
+    apiFetch<AvailabilityResponse>(`/courts/${courtId}/availability?date=${encodeURIComponent(date)}`)
       .then(setAvailability)
       .catch((e) => setError(e instanceof Error ? e.message : String(e)));
-  }, [params.id, date]);
+  }, [courtId, date]);
 
   async function book(startAt: string) {
     setError(null);
@@ -71,11 +79,11 @@ export default function CourtPage({ params }: { params: { id: string } }) {
       await apiFetch(`/bookings`, {
         method: "POST",
         auth: true,
-        body: { courtId: params.id, startAt },
+        body: { courtId, startAt },
       });
       setInfo("Бронь создана.");
       const next = await apiFetch<AvailabilityResponse>(
-        `/courts/${params.id}/availability?date=${encodeURIComponent(date)}`,
+        `/courts/${courtId}/availability?date=${encodeURIComponent(date)}`,
       );
       setAvailability(next);
     } catch (e) {
@@ -89,7 +97,7 @@ export default function CourtPage({ params }: { params: { id: string } }) {
     <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-semibold">{court ? court.name : "Корт"}</h1>
-        <p className="text-sm text-gray-600">{court ? court.location : `ID: ${params.id}`}</p>
+        <p className="text-sm text-gray-600">{court ? court.location : `ID: ${courtId || "—"}`}</p>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -112,6 +120,12 @@ export default function CourtPage({ params }: { params: { id: string } }) {
         </button>
         <span className="ml-auto text-sm text-gray-600">График: 07:00–00:00</span>
       </div>
+
+      {!courtId ? (
+        <div className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          Не удалось определить ID корта из URL.
+        </div>
+      ) : null}
 
       {error ? (
         <div className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>
