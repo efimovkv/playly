@@ -5,7 +5,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { DateTime } from 'luxon';
 import { PrismaService } from '@/prisma/prisma.service';
 import { MOSCOW_TZ } from '@/time/moscow';
@@ -55,7 +55,7 @@ export class BookingsService {
         },
       });
     } catch (e: any) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
+      if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002') {
         throw new ConflictException('Этот слот уже занят');
       }
       throw e;

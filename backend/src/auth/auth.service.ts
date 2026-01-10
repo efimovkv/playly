@@ -1,6 +1,7 @@
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Prisma, Role } from '@prisma/client';
+import { Role } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '@/prisma/prisma.service';
 import type { AuthUser, JwtPayload } from './auth.types';
@@ -21,7 +22,7 @@ export class AuthService {
       });
       return { accessToken: await this.sign(user) };
     } catch (e: any) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
+      if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002') {
         throw new ConflictException('Пользователь с таким email уже существует');
       }
       throw e;

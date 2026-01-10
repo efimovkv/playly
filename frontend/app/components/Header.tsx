@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { clearToken, getToken } from "../lib/auth";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "./ui/cn";
@@ -35,11 +34,7 @@ function ChevronDownIcon({ className }: { className?: string }) {
 export function Header() {
   const router = useRouter();
   const pathname = usePathname();
-  const [hasToken, setHasToken] = useState(false);
-
-  useEffect(() => {
-    setHasToken(Boolean(getToken()));
-  }, [pathname]);
+  const hasToken = Boolean(getToken());
 
   const nav = [
     { href: "/courts", label: "Корты" },
@@ -111,7 +106,6 @@ export function Header() {
                 variant="secondary"
                 onClick={() => {
                   clearToken();
-                  setHasToken(false);
                   router.push("/");
                 }}
               >

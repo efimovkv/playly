@@ -29,12 +29,8 @@ type AvailabilityResponse = {
 export default function CourtPage() {
   const router = useRouter();
   const pathname = usePathname();
-  const params = useParams();
-  const courtId = useMemo(() => {
-    const raw = (params as any)?.id as string | string[] | undefined;
-    if (!raw) return "";
-    return Array.isArray(raw) ? raw[0] ?? "" : raw;
-  }, [params]);
+  const params = useParams<{ id: string }>();
+  const courtId = useMemo(() => params?.id ?? "", [params]);
 
   const [court, setCourt] = useState<Court | null>(null);
   const [date, setDate] = useState<string>(() => DateTime.now().setZone("Europe/Moscow").toISODate()!);

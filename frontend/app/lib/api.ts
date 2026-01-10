@@ -42,10 +42,14 @@ export async function apiFetch<T>(
   const data = text ? (JSON.parse(text) as unknown) : null;
 
   if (!res.ok) {
-    const msg =
-      (data && typeof data === 'object' && 'message' in data && (data as any).message) ||
-      `Ошибка ${res.status}`;
-    throw new Error(Array.isArray(msg) ? msg.join(', ') : String(msg));
+    const msg = (() => {
+      if (!data || typeof data !== "object") return null;
+      const message = (data as Record<string, unknown>).message;
+      if (typeof message === "string") return message;
+      if (Array.isArray(message) && message.every((x) => typeof x === "string")) return message.join(", ");
+      return null;
+    })();
+    throw new Error(msg ?? `Ошибка ${res.status}`);
   }
 
   return data as T;
