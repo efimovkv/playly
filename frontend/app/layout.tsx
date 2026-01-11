@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Header } from "./components/Header";
+import { AppShell } from "./components/AppShell";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,13 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header />
-        <div className="min-h-[calc(100vh-56px)] bg-gradient-to-b from-slate-50 to-white">
-          <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
-          <footer className="mx-auto max-w-5xl px-4 pb-10 pt-2 text-xs text-slate-500">
-            Москва • График кортов 07:00–00:00 • Бронь максимум за 24 часа
-          </footer>
-        </div>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );
