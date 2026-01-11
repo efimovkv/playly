@@ -55,13 +55,13 @@ export default function MyBookingsPage() {
     <div className="space-y-6">
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Мои брони</h1>
-          <p className="mt-1 text-sm text-slate-600">Здесь можно посмотреть и отменить свои брони.</p>
+          <h1 className="text-3xl font-semibold tracking-tight text-white/90">Мои брони</h1>
+          <p className="mt-1 text-sm text-white/55">Здесь можно посмотреть и отменить свои брони.</p>
         </div>
       </div>
 
       {error ? (
-        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">{error}</div>
+        <div className="rounded-2xl border border-rose-400/20 bg-rose-500/10 p-4 text-sm text-rose-200">{error}</div>
       ) : null}
 
       {!items ? (
@@ -73,7 +73,7 @@ export default function MyBookingsPage() {
           <CardContent>
             <div className="space-y-2">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="h-14 animate-pulse rounded-2xl bg-slate-100" />
+                <div key={i} className="h-14 animate-pulse rounded-2xl bg-white/[0.06]" />
               ))}
             </div>
           </CardContent>
