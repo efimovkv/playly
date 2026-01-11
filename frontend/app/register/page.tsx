@@ -3,7 +3,7 @@ import { RegisterClient } from "./RegisterClient";
 
 export default function RegisterPage() {
   return (
-    <Suspense fallback={<div className="text-sm text-gray-600">Загрузка…</div>}>
+    <Suspense fallback={<div className="text-sm text-white/55">Загрузка…</div>}>
       <RegisterClient />
     </Suspense>
   );

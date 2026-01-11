@@ -22,14 +22,14 @@ export function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/70 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-black/25 backdrop-blur-xl">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900 text-sm font-semibold text-white">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-lime-300 text-sm font-semibold text-[#0a1208] shadow-[0_10px_30px_rgba(163,230,53,0.25)]">
               TB
             </span>
-            <span className="font-semibold tracking-tight text-slate-900">Tennis Booking</span>
+            <span className="font-semibold tracking-tight text-white/90">Tennis Booking</span>
           </Link>
           <nav className="hidden items-center gap-1 sm:flex">
             {nav.map((item) => {
@@ -40,7 +40,7 @@ export function Header() {
                   href={item.href}
                   className={cn(
                     "rounded-xl px-3 py-2 text-sm font-medium transition-colors",
-                    active ? "bg-slate-900 text-white" : "text-slate-700 hover:bg-slate-100",
+                    active ? "bg-white/[0.06] text-white/90 ring-1 ring-white/10" : "text-white/65 hover:bg-white/[0.06]",
                   )}
                 >
                   {item.label}
@@ -53,7 +53,7 @@ export function Header() {
         <div className="flex items-center gap-3">
           {!hasToken ? (
             <>
-              <Link href="/login" className="text-sm font-medium text-slate-700 hover:text-slate-900">
+              <Link href="/login" className="text-sm font-medium text-white/70 hover:text-white/90">
                 Вход
               </Link>
               <Link href="/register">

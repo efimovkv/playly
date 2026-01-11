@@ -11,10 +11,10 @@ export function Badge({ className, tone = "neutral", ...props }: Props) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1",
-        tone === "neutral" && "bg-slate-50 text-slate-700 ring-slate-200",
-        tone === "success" && "bg-emerald-50 text-emerald-700 ring-emerald-200",
-        tone === "danger" && "bg-rose-50 text-rose-700 ring-rose-200",
+        "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 backdrop-blur",
+        tone === "neutral" && "bg-white/[0.04] text-white/70 ring-white/10",
+        tone === "success" && "bg-lime-300/15 text-lime-200 ring-lime-300/20",
+        tone === "danger" && "bg-rose-500/15 text-rose-200 ring-rose-400/20",
         className,
       )}
       {...props}

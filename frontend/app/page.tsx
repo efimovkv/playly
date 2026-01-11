@@ -34,11 +34,11 @@ export default function Home() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-3xl border border-slate-200/60 bg-white/70 p-6 shadow-sm backdrop-blur">
+      <Card className="p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Бронирование кортов</h1>
-            <p className="mt-1 text-sm text-slate-600">
+            <h1 className="text-3xl font-semibold tracking-tight text-white/90">Играй сегодня.</h1>
+            <p className="mt-1 text-sm text-white/55">
               Выберите корт, посмотрите свободные слоты и забронируйте на 1 час.
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -55,14 +55,16 @@ export default function Home() {
             />
           </div>
         </div>
-      </div>
+      </Card>
 
       {error ? (
-        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">{error}</div>
+        <div className="rounded-2xl border border-rose-400/20 bg-rose-500/10 p-4 text-sm text-rose-200">
+          {error}
+        </div>
       ) : null}
 
       {!filtered ? (
-        <div className="text-sm text-slate-600">Загрузка…</div>
+        <div className="text-sm text-white/55">Загрузка…</div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((c) => (
@@ -74,8 +76,8 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-700">Слоты на сегодня/завтра</span>
-                    <span className="text-sm font-medium text-slate-900">Открыть →</span>
+                    <span className="text-sm text-white/60">Слоты на сегодня/завтра</span>
+                    <span className="text-sm font-medium text-lime-200">Открыть →</span>
                   </div>
                 </CardContent>
               </Card>

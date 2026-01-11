@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Dark, tennis-inspired palette (Playly-like) */
+  --background: #070a08;
+  --foreground: #e9f3e7;
 }
 
 @theme inline {
@@ -12,16 +13,33 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji",
     "Segoe UI Emoji";
+}
+
+html,
+body {
+  height: 100%;
+}
+
+/* Background layers are rendered from layout.tsx */
+.app-bg {
+  background:
+    radial-gradient(900px 600px at 15% 10%, rgba(163, 230, 53, 0.20), transparent 55%),
+    radial-gradient(900px 600px at 85% 25%, rgba(34, 197, 94, 0.10), transparent 55%),
+    radial-gradient(1100px 700px at 50% 95%, rgba(163, 230, 53, 0.08), transparent 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.00) 40%),
+    linear-gradient(180deg, #070a08 0%, #050705 100%);
+  filter: saturate(1.1) contrast(1.05);
+}
+
+.app-noise {
+  opacity: 0.10;
+  mix-blend-mode: overlay;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.06) 0px, rgba(255, 255, 255, 0.06) 1px, transparent 1px, transparent 3px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1px, transparent 1px, transparent 4px);
 }

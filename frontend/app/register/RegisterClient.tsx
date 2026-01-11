@@ -40,11 +40,13 @@ export function RegisterClient() {
   return (
     <div className="mx-auto max-w-md space-y-4">
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Регистрация</h1>
-        <p className="mt-1 text-sm text-slate-600">Создайте аккаунт, чтобы бронировать корты.</p>
+        <h1 className="text-3xl font-semibold tracking-tight text-white/90">Регистрация</h1>
+        <p className="mt-1 text-sm text-white/55">Создайте аккаунт, чтобы бронировать корты.</p>
       </div>
       {error ? (
-        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">{error}</div>
+        <div className="rounded-2xl border border-rose-400/20 bg-rose-500/10 p-4 text-sm text-rose-200">
+          {error}
+        </div>
       ) : null}
       <Card>
         <CardHeader>
@@ -54,7 +56,7 @@ export function RegisterClient() {
         <CardContent>
           <form onSubmit={onSubmit} className="space-y-3">
             <label className="block text-sm">
-              <div className="mb-1 text-slate-700">Email</div>
+              <div className="mb-1 text-white/65">Email</div>
               <Input
                 type="email"
                 value={email}
@@ -64,7 +66,7 @@ export function RegisterClient() {
               />
             </label>
             <label className="block text-sm">
-              <div className="mb-1 text-slate-700">Пароль</div>
+              <div className="mb-1 text-white/65">Пароль</div>
               <Input
                 type="password"
                 value={password}
@@ -80,9 +82,9 @@ export function RegisterClient() {
           </form>
         </CardContent>
       </Card>
-      <div className="text-sm text-gray-600">
+      <div className="text-sm text-white/55">
         Уже есть аккаунт?{" "}
-        <Link className="font-medium text-slate-900 underline decoration-slate-300 underline-offset-4" href="/login">
+        <Link className="font-medium text-lime-200 underline decoration-white/20 underline-offset-4" href="/login">
           Вход
         </Link>
       </div>

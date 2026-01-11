@@ -100,8 +100,8 @@ export default function CourtPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-semibold tracking-tight text-slate-900">{court ? court.name : "Корт"}</h1>
-        <p className="text-sm text-slate-600">{court ? court.location : `ID: ${courtId || "—"}`}</p>
+        <h1 className="text-3xl font-semibold tracking-tight text-white/90">{court ? court.name : "Корт"}</h1>
+        <p className="text-sm text-white/55">{court ? court.location : `ID: ${courtId || "—"}`}</p>
         <div className="flex flex-wrap gap-2 pt-1">
           <Badge tone="neutral">07:00–00:00</Badge>
           <Badge tone="neutral">1 час</Badge>
@@ -119,10 +119,10 @@ export default function CourtPage() {
             <div className="grid grid-cols-2 gap-2">
               <button
                 className={cn(
-                  "h-10 rounded-xl text-sm font-medium ring-1 transition-colors",
+                  "h-10 rounded-xl text-sm font-medium ring-1 transition-colors backdrop-blur",
                   date === today
-                    ? "bg-slate-900 text-white ring-slate-900"
-                    : "bg-white text-slate-700 ring-slate-200 hover:bg-slate-50",
+                    ? "bg-lime-300 text-[#0a1208] ring-lime-300/30 shadow-[0_10px_30px_rgba(163,230,53,0.18)]"
+                    : "bg-white/[0.04] text-white/70 ring-white/10 hover:bg-white/[0.06]",
                 )}
                 onClick={() => setDate(today)}
               >
@@ -130,33 +130,33 @@ export default function CourtPage() {
               </button>
               <button
                 className={cn(
-                  "h-10 rounded-xl text-sm font-medium ring-1 transition-colors",
+                  "h-10 rounded-xl text-sm font-medium ring-1 transition-colors backdrop-blur",
                   date === tomorrow
-                    ? "bg-slate-900 text-white ring-slate-900"
-                    : "bg-white text-slate-700 ring-slate-200 hover:bg-slate-50",
+                    ? "bg-lime-300 text-[#0a1208] ring-lime-300/30 shadow-[0_10px_30px_rgba(163,230,53,0.18)]"
+                    : "bg-white/[0.04] text-white/70 ring-white/10 hover:bg-white/[0.06]",
                 )}
                 onClick={() => setDate(tomorrow)}
               >
                 Завтра
               </button>
             </div>
-            <div className="rounded-xl bg-slate-50 p-3 text-xs text-slate-600 ring-1 ring-slate-200">
+            <div className="rounded-xl bg-white/[0.04] p-3 text-xs text-white/60 ring-1 ring-white/10">
               Слоты формируются по часовым интервалам. Последний старт — <b>23:00</b>.
             </div>
           </CardContent>
         </Card>
 
       {!courtId ? (
-        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+        <div className="rounded-2xl border border-rose-400/20 bg-rose-500/10 p-4 text-sm text-rose-200">
           Не удалось определить ID корта из URL.
         </div>
       ) : null}
 
       {error ? (
-        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">{error}</div>
+        <div className="rounded-2xl border border-rose-400/20 bg-rose-500/10 p-4 text-sm text-rose-200">{error}</div>
       ) : null}
       {info ? (
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">{info}</div>
+        <div className="rounded-2xl border border-lime-300/20 bg-lime-300/10 p-4 text-sm text-lime-100">{info}</div>
       ) : null}
 
       {!availability ? (
@@ -168,7 +168,7 @@ export default function CourtPage() {
           <CardContent>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="h-10 animate-pulse rounded-xl bg-slate-100" />
+                <div key={i} className="h-10 animate-pulse rounded-xl bg-white/[0.06]" />
               ))}
             </div>
           </CardContent>
@@ -188,17 +188,20 @@ export default function CourtPage() {
           <CardContent>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-5">
               {availability.slots.map((s) => (
-                <div key={s.startAt} className="flex items-center justify-between gap-2 rounded-2xl bg-slate-50 p-2 ring-1 ring-slate-200">
+                <div
+                  key={s.startAt}
+                  className="flex items-center justify-between gap-2 rounded-2xl bg-white/[0.03] p-2 ring-1 ring-white/10 backdrop-blur"
+                >
                   <div className="min-w-0">
-                    <div className="text-sm font-semibold text-slate-900">{s.label}</div>
-                    <div className="text-[11px] text-slate-600">1 час</div>
+                    <div className="text-sm font-semibold text-white/85">{s.label}</div>
+                    <div className="text-[11px] text-white/45">1 час</div>
                   </div>
                   {s.isAvailable ? (
                     <Button size="sm" disabled={busy} onClick={() => book(s.startAt)}>
                       + 
                     </Button>
                   ) : (
-                    <span className="text-xs font-medium text-slate-500">—</span>
+                    <span className="text-xs font-medium text-white/35">—</span>
                   )}
                 </div>
               ))}
